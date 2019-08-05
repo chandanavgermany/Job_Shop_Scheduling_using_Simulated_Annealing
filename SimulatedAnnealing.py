@@ -70,7 +70,7 @@ class SimulatedAnnealing:
                 jobshopLoaderObj.printJobMatrix()
                 print("\n Initial Solution " + str(initialSolution))
                 print("\n Best Solution")
-                print(solution[-1][1])
+                print(best)
                 print(timeTaken)
                 print(scheduleLength)
                 plt.plot(timeTaken, scheduleLength)
