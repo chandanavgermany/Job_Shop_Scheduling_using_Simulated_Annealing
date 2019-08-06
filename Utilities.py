@@ -12,11 +12,15 @@ import colorsys
 
 class Utilities:
     
+    # Generate the random solution
     def generate(self,numberOfJobs, numberOfMachines):
         generate = [i for i in list(range(numberOfJobs)) for _ in range(numberOfMachines)]
         random.shuffle(generate)
         return generate
     
+    # Get the neighbors of the current state
+    # Mode = Normal: Swap an element with immediate neighbor
+    # Mode = Random or Others: Swap an element with a randomnly selected element
     def getNeighbors(self, currentState, mode = "normal"):
         listOfNeighbors = list()
         for i in range(len(currentState) - 1):
@@ -30,6 +34,7 @@ class Utilities:
         
         return listOfNeighbors
     
+    # Create an initial solution
     def getInitialSolution(self, jobshopLoaderObj):
         jobs = jobshopLoaderObj.jobs_list()
         initialSolution = 0
@@ -38,6 +43,8 @@ class Utilities:
                 initialSolution+= jobs[i][j][1]
         return initialSolution
     
+    # To obtain the cost of each sequence
+    # Cost is the amount of time taken to execute all the operations of every job given
     def getCost(self, jobshopLoaderObj, newstate):
         numberOfOperations = jobshopLoaderObj.numberOfOperations()
         numberOfJobs = jobshopLoaderObj.numberOfJobs()
@@ -55,6 +62,7 @@ class Utilities:
             time_Operations[machine] = end
         return max(time_Operations)
     
+    # To plot the best solution using the plot in matplotlib
     def showSolution(self, jobshopLoaderObj, solution):
         numberOfOperations = jobshopLoaderObj.numberOfOperations()
         numberOfJobs = jobshopLoaderObj.numberOfJobs()
@@ -64,11 +72,10 @@ class Utilities:
         jobs = jobshopLoaderObj.jobs_list()
         index = np.arange(numberOfJobs)
         width = 0.3
-        jobs_string = list()
+        jobs_string = list()        
         m = 0
         old_state = []
         new_state = []
-        old_state_graph = []
         
         colors = self.get_colors(numberOfOperations)
         for i in solution:
@@ -79,10 +86,12 @@ class Utilities:
             time_Jobs[i] = end
             time_Operations[machine] = end
             print(time_Jobs)
+            # Initialiasing the plot
             if m == 0:
                 plt.bar(index,tuple(time_Jobs), width, color = colors[machine])  
                 new_state = time_Jobs[:]
                 old_state = new_state[:]
+            # Add the stacked bar for each job on the initialised plot
             else:
                 new_state = [a - b for a, b in zip(time_Jobs, old_state)]
                 dif_num = 0
@@ -108,7 +117,7 @@ class Utilities:
         plt.xticks(index, tuple(jobs_string))
         plt.show()
     
-
+    # To create unique colors for plotting for different machines
     def get_colors(self, num_colors):    
         colors=[]
         for i in np.arange(0., 360., 360. / num_colors):
