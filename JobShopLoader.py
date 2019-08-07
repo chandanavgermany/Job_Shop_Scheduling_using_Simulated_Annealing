@@ -10,6 +10,10 @@ class JobShopLoader:
     jobs = []
     jobShop = []
     
+    # Load the input file containing the matrix
+    # Row: A job with the sequence of operations
+    # Odd column: Machine number on which the operation needs to be executed
+    # Even column: The amount of time required to complete an operation in the job
     def load(self, file_name):
         inputfile = open(file_name, "r")
         jobs_list = list()
@@ -21,14 +25,18 @@ class JobShopLoader:
         self.jobs = jobs_list[:]
         return self.jobs
     
+    # To obtain to number of operations in a job
     def numberOfOperations(self):
         return len(self.jobs[0])
     
+    # To obtain the number of jobs given
     def numberOfJobs(self):
         return len(self.jobs)
     
+    # To obtain the jobs as a list
     def jobs_list(self):
         return self.jobs
+    
     
     def printJobMatrix(self):
         print(str(self.numberOfJobs()) + ' * ' + str(self.numberOfOperations()))
