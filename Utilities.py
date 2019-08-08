@@ -9,6 +9,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 import colorsys
+import matplotlib.patches as mpatches
 
 class Utilities:
     
@@ -77,7 +78,7 @@ class Utilities:
         old_state = []
         new_state = []
         
-        colors = self.get_colors(numberOfOperations)
+        colors, colorPatches = self.get_colors(numberOfOperations)
         for i in solution:
             machine, time = jobs[i][iterationVar[i]]
             iterationVar[i] += 1
@@ -103,7 +104,7 @@ class Utilities:
                         break
                 if dif_num != time:
                     new_state[position] = dif_num - time
-                    plt.bar(index, tuple(new_state), width, bottom=old_state, color = (1,1,1,1))
+                    plt.bar(index, tuple(new_state), width, bottom=old_state, color = (1,1,1,1),)
                     old_state = [a + b for a, b in zip(old_state, new_state)]
                     new_state[position] = time 
                     plt.bar(index, tuple(new_state), width, bottom = old_state, color = colors[machine])
@@ -115,15 +116,26 @@ class Utilities:
         for i in index:
             jobs_string.append('J '+str(i))
         plt.xticks(index, tuple(jobs_string))
+        plt.xlabel('Jobs')
+        plt.ylabel('Time in seconds')
+        legend_x = 1
+        legend_y = 0.5
+        plt.legend(handles=colorPatches, title = 'Machines', loc='center left', bbox_to_anchor=(legend_x, legend_y))      
         plt.show()
     
     # To create unique colors for plotting for different machines
     def get_colors(self, num_colors):    
         colors=[]
+        colorPatches=[]
+        j = 0
         for i in np.arange(0., 360., 360. / num_colors):
             hue = i/360.
             lightness = (50 + np.random.rand() * 10)/100.
             saturation = (90 + np.random.rand() * 10)/100.
-            colors.append(colorsys.hls_to_rgb(hue, lightness, saturation))
-        return colors
+            color = colorsys.hls_to_rgb(hue, lightness, saturation)
+            colors.append(color)
+            patch = mpatches.Patch(color=color, label='M' + str(j))
+            colorPatches.append(patch)
+            j += 1
+        return colors, colorPatches
             
